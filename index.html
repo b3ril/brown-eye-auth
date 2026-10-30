@@ -1,0 +1,798 @@
+<title>Brown Eye Auth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5EFE4;
+    --surface:#FFFFFF;
+    --surface-2:#EFE3CE;
+    --border:#DCC8A6;
+    --text:#251A0E;
+    --text-dim:#7A664C;
+    --accent:#A8632B;
+    --accent-bright:#8B4E22;
+    --accent-soft:#EAD4AF;
+    --success:#5C7A4E;
+    --success-soft:#DEE7D3;
+    --shadow: 0 1px 2px rgba(37,26,14,.06), 0 8px 24px -12px rgba(37,26,14,.18);
+    --radius: 14px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#120D09;
+      --surface:#1B140D;
+      --surface-2:#241B12;
+      --border:#3C2C1A;
+      --text:#F1E5D2;
+      --text-dim:#B9A488;
+      --accent:#DE9752;
+      --accent-bright:#F2B378;
+      --accent-soft:#2E2113;
+      --success:#8FAE7F;
+      --success-soft:#26311F;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#120D09;
+    --surface:#1B140D;
+    --surface-2:#241B12;
+    --border:#3C2C1A;
+    --text:#F1E5D2;
+    --text-dim:#B9A488;
+    --accent:#DE9752;
+    --accent-bright:#F2B378;
+    --accent-soft:#2E2113;
+    --success:#8FAE7F;
+    --success-soft:#26311F;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 30px -14px rgba(0,0,0,.6);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Hanken Grotesk", system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  h1,h2,h3,.display{
+    font-family:"Unbounded", system-ui, sans-serif;
+    text-wrap:balance;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:"Space Mono", ui-monospace, monospace;
+  }
+  p{margin:0;}
+  a{color:inherit;}
+  img{max-width:100%;}
+  ::selection{ background:var(--accent-soft); }
+
+  .wrap{
+    max-width:1160px;
+    margin:0 auto;
+    padding-inline:24px;
+  }
+  .eyebrow{
+    font-family:"Space Mono", monospace;
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:6px;height:6px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-family:"Hanken Grotesk", sans-serif;
+    font-weight:600;
+    font-size:.95rem;
+    padding:12px 22px;
+    border-radius:999px;
+    border:1px solid transparent;
+    cursor:pointer;
+    text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .btn-primary{
+    background:var(--accent);
+    color:#FFF6EA;
+    box-shadow:var(--shadow);
+  }
+  .btn-primary:hover{ background:var(--accent-bright); transform:translateY(-1px); }
+  .btn-ghost{
+    background:transparent;
+    border-color:var(--border);
+    color:var(--text);
+  }
+  .btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-block:14px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); }
+  .brand svg{ width:30px; height:30px; }
+  .brand-name{ font-family:"Unbounded"; font-weight:700; font-size:1rem; letter-spacing:-.01em; }
+  .nav-links{ display:flex; align-items:center; gap:28px; font-size:.92rem; font-weight:500; }
+  .nav-links a{ text-decoration:none; color:var(--text-dim); }
+  .nav-links a:hover{ color:var(--accent); }
+  .nav-actions{ display:flex; align-items:center; gap:12px; }
+  .nav-mobile-hide{ display:flex; }
+  @media (max-width:760px){
+    .nav-mobile-hide{ display:none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding-block:64px 56px;
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:48px;
+    align-items:center;
+  }
+  @media (max-width:900px){ .hero{ grid-template-columns:1fr; padding-block:40px; } }
+  .hero h1{
+    font-size:clamp(2.1rem, 4.4vw, 3.4rem);
+    line-height:1.06;
+    margin-block:16px 18px;
+  }
+  .hero h1 em{ font-style:normal; color:var(--accent); }
+  .hero p.lead{
+    max-width:52ch;
+    color:var(--text-dim);
+    font-size:1.06rem;
+  }
+  .hero-cta{ display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; }
+  .hero-note{
+    margin-top:18px;
+    font-size:.82rem;
+    color:var(--text-dim);
+    font-family:"Space Mono", monospace;
+  }
+
+  /* scanner visual */
+  .scan-panel{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    padding:22px;
+  }
+  .scanner{
+    position:relative;
+    aspect-ratio:1;
+    border-radius:50%;
+    margin:0 auto;
+    max-width:300px;
+    background:
+      repeating-conic-gradient(var(--border) 0deg 1.2deg, transparent 1.2deg 15deg);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .scanner::before{
+    content:"";
+    position:absolute; inset:14px;
+    border-radius:50%;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+  }
+  .scan-ring{
+    position:absolute; border-radius:50%; border:1px solid var(--accent);
+    opacity:.55;
+  }
+  .scan-ring.r1{ inset:26%; }
+  .scan-ring.r2{ inset:38%; opacity:.75; }
+  .scan-ring.r3{ inset:48%; opacity:.95; }
+  .scan-core{
+    position:relative; width:14px; height:14px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 6px var(--accent-soft);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow:0 0 0 6px var(--accent-soft); }
+    50%{ box-shadow:0 0 0 12px var(--accent-soft); }
+  }
+  .scan-sweep{
+    position:absolute; inset:14px; border-radius:50%;
+    background:conic-gradient(from 0deg, color-mix(in srgb, var(--accent) 55%, transparent), transparent 24%);
+    animation:spin 3.6s linear infinite;
+    mix-blend-mode:multiply;
+  }
+  :root[data-theme="dark"] .scan-sweep, @supports not (color:red) { }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .scan-sweep{ mix-blend-mode:screen; } }
+  :root[data-theme="dark"] .scan-sweep{ mix-blend-mode:screen; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @media (prefers-reduced-motion:reduce){
+    .scan-sweep, .scan-core{ animation:none; }
+  }
+  .scan-readout{
+    margin-top:18px;
+    border-top:1px dashed var(--border);
+    padding-top:14px;
+    font-family:"Space Mono", monospace;
+    font-size:.78rem;
+    color:var(--text-dim);
+    display:grid;
+    gap:6px;
+  }
+  .scan-readout .ok{ color:var(--success); }
+  .scan-readout div{ display:flex; justify-content:space-between; gap:12px; }
+
+  /* ---------- TRUST BAR ---------- */
+  .trust{
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding-block:22px;
+  }
+  .trust-label{
+    text-align:center;
+    font-size:.78rem;
+    color:var(--text-dim);
+    margin-bottom:16px;
+  }
+  .trust-logos{
+    display:flex; flex-wrap:wrap; gap:28px 40px;
+    justify-content:center;
+    font-family:"Space Mono", monospace;
+    font-weight:700;
+    color:var(--text-dim);
+    font-size:.9rem;
+    opacity:.85;
+  }
+
+  /* ---------- SECTION shell ---------- */
+  section.block{ padding-block:76px; }
+  .section-head{
+    max-width:640px;
+    margin-inline:auto;
+    text-align:center;
+    display:flex; flex-direction:column; gap:14px;
+    margin-bottom:44px;
+  }
+  .section-head h2{ font-size:clamp(1.7rem,3vw,2.3rem); }
+  .section-head p{ color:var(--text-dim); }
+
+  /* ---------- STATS ---------- */
+  .stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  @media (max-width:760px){ .stats-grid{ grid-template-columns:repeat(2,1fr); } }
+  .stat{
+    background:var(--surface);
+    padding:28px 20px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:"Unbounded"; font-weight:700;
+    font-size:clamp(1.5rem,2.4vw,2rem);
+    color:var(--accent);
+    font-variant-numeric:tabular-nums;
+  }
+  .stat .cap{ margin-top:8px; font-size:.86rem; color:var(--text-dim); }
+
+  /* ---------- FEATURES ---------- */
+  .feat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+  }
+  @media (max-width:900px){ .feat-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:600px){ .feat-grid{ grid-template-columns:1fr; } }
+  .feat-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:24px;
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .feat-icon{
+    width:38px; height:38px;
+    border-radius:10px;
+    background:var(--accent-soft);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--accent);
+  }
+  .feat-icon svg{ width:20px; height:20px; }
+  .feat-card h3{ font-family:"Hanken Grotesk"; font-weight:700; font-size:1.03rem; }
+  .feat-card p{ color:var(--text-dim); font-size:.92rem; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    align-items:center;
+  }
+  @media (max-width:900px){ .how{ grid-template-columns:1fr; } }
+  .steps{ display:flex; flex-direction:column; gap:26px; }
+  .step{ display:flex; gap:16px; }
+  .step-num{
+    font-family:"Space Mono"; font-weight:700; color:var(--accent);
+    font-size:.85rem;
+    width:30px; height:30px; flex:none;
+    border:1px solid var(--border); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step h3{ font-size:1rem; margin-bottom:4px; }
+  .step p{ color:var(--text-dim); font-size:.92rem; }
+
+  /* login mock */
+  .login-mock{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .login-mock .chrome{
+    display:flex; gap:6px; padding:12px 16px;
+    border-bottom:1px solid var(--border);
+    background:var(--surface-2);
+  }
+  .login-mock .dot{ width:9px; height:9px; border-radius:50%; background:var(--border); }
+  .login-body{ padding:32px 28px 34px; text-align:center; }
+  .login-body .mark{ width:34px; height:34px; margin:0 auto 14px; }
+  .login-body h3{ font-family:"Unbounded"; font-size:1.05rem; margin-bottom:4px; }
+  .login-body p{ color:var(--text-dim); font-size:.85rem; margin-bottom:22px; }
+  .sso-btn{
+    display:flex; align-items:center; gap:10px;
+    width:100%;
+    padding:11px 16px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    font-size:.88rem; font-weight:600;
+    margin-bottom:10px;
+    color:var(--text);
+  }
+  .sso-btn.selected{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+    color:var(--accent-bright);
+    box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+  .sso-swatch{ width:16px; height:16px; border-radius:4px; flex:none; }
+
+  /* ---------- PRICING ---------- */
+  .price-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:18px;
+  }
+  @media (max-width:900px){ .price-grid{ grid-template-columns:1fr; } }
+  .price-card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .price-card.featured{
+    border-color:var(--accent);
+    box-shadow:var(--shadow);
+    position:relative;
+  }
+  .price-tag{
+    position:absolute; top:-12px; right:24px;
+    background:var(--accent); color:#FFF6EA;
+    font-family:"Space Mono"; font-size:.68rem; letter-spacing:.08em;
+    padding:4px 10px; border-radius:999px; text-transform:uppercase;
+  }
+  .price-card h3{ font-size:1.05rem; }
+  .price-amt{ font-family:"Unbounded"; font-weight:700; font-size:2rem; }
+  .price-amt span{ font-family:"Hanken Grotesk"; font-weight:500; font-size:.9rem; color:var(--text-dim); }
+  .price-card ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; font-size:.88rem; color:var(--text-dim); }
+  .price-card li{ display:flex; gap:8px; align-items:flex-start; }
+  .price-card li svg{ flex:none; width:16px; height:16px; margin-top:2px; color:var(--success); }
+
+  /* ---------- TESTIMONIALS ---------- */
+  .quote-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  @media (max-width:900px){ .quote-grid{ grid-template-columns:1fr; } }
+  .quote-card{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:24px;
+    display:flex; flex-direction:column; gap:16px;
+  }
+  .quote-card p.q{ font-size:.96rem; }
+  .quote-who{ display:flex; align-items:center; gap:10px; }
+  .quote-avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent-bright);
+    display:flex; align-items:center; justify-content:center;
+    font-family:"Unbounded"; font-weight:700; font-size:.8rem;
+  }
+  .quote-who .name{ font-weight:700; font-size:.86rem; }
+  .quote-who .role{ font-size:.78rem; color:var(--text-dim); }
+
+  /* ---------- FAQ ---------- */
+  .faq{ max-width:760px; margin-inline:auto; display:flex; flex-direction:column; gap:10px; }
+  .faq-item{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .faq-item summary{
+    cursor:pointer;
+    list-style:none;
+    padding:18px 20px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-weight:600;
+    font-size:.96rem;
+  }
+  .faq-item summary::-webkit-details-marker{ display:none; }
+  .faq-item summary .chev{ transition:transform .18s ease; color:var(--accent); flex:none; }
+  .faq-item[open] summary .chev{ transform:rotate(45deg); }
+  .faq-item .a{ padding:0 20px 18px; color:var(--text-dim); font-size:.92rem; max-width:64ch; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ border-top:1px solid var(--border); padding-block:48px 28px; }
+  .disclaimer{
+    background:var(--surface-2);
+    border:1px dashed var(--border);
+    border-radius:12px;
+    padding:18px 20px;
+    font-size:.84rem;
+    color:var(--text-dim);
+    display:flex; gap:12px;
+    margin-bottom:36px;
+  }
+  .disclaimer svg{ flex:none; width:20px; height:20px; color:var(--accent); margin-top:1px; }
+  .foot-grid{
+    display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:32px;
+    margin-bottom:32px;
+  }
+  @media (max-width:700px){ .foot-grid{ grid-template-columns:1fr 1fr; } }
+  .foot-col h4{ font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-dim); margin-bottom:12px; }
+  .foot-col ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; font-size:.9rem; }
+  .foot-col a{ text-decoration:none; color:var(--text); }
+  .foot-col a:hover{ color:var(--accent); }
+  .foot-bottom{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    padding-top:24px; border-top:1px solid var(--border);
+    font-size:.8rem; color:var(--text-dim);
+  }
+</style>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.6" opacity=".35"/>
+        <circle cx="16" cy="16" r="9" stroke="currentColor" stroke-width="1.6" opacity=".65" style="color:var(--accent)"/>
+        <circle cx="16" cy="16" r="3.4" fill="var(--accent)"/>
+      </svg>
+      <span class="brand-name">Brown&nbsp;Eye&nbsp;Auth</span>
+    </a>
+    <nav class="nav-links nav-mobile-hide">
+      <a href="#platform">Platform</a>
+      <a href="#security">Security</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-actions">
+      <a class="btn btn-ghost nav-mobile-hide" href="#faq">Sign in</a>
+      <a class="btn btn-primary" href="#pricing">Get started</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <span class="eyebrow">ENTERPRISE BIOMETRIC SSO</span>
+      <h1>The one identifier<br>you've <em>never</em> screenshotted.</h1>
+      <p class="lead">Fingerprints end up on wine glasses. Faces end up on billboards. Retinas end up in a documentary about surveillance. Brown&nbsp;Eye&nbsp;Auth verifies identity using the single most unique pattern you own &mdash; one you have never shown a stranger, a camera, or a LinkedIn recruiter.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#pricing">Start free scan</a>
+        <a class="btn btn-ghost" href="#platform">See how it works</a>
+      </div>
+      <p class="hero-note">No credit card. No cameras aimed at anything you'd regret. Just the truth, turned around.</p>
+    </div>
+
+    <div class="scan-panel">
+      <div class="scanner">
+        <div class="scan-sweep"></div>
+        <div class="scan-ring r1"></div>
+        <div class="scan-ring r2"></div>
+        <div class="scan-ring r3"></div>
+        <div class="scan-core"></div>
+      </div>
+      <div class="scan-readout">
+        <div><span>SCAN&nbsp;STATUS</span><span class="ok">VERIFIED</span></div>
+        <div><span>MATCH&nbsp;CONFIDENCE</span><span id="rt-conf">99.9997%</span></div>
+        <div><span>PATTERN&nbsp;ENTROPY</span><span>8.4&nbsp;bits/mm²</span></div>
+        <div><span>PUBLIC&nbsp;EXPOSURES</span><span class="ok">0</span></div>
+        <div><span>IDENTITIES&nbsp;VERIFIED&nbsp;TODAY</span><span id="rt-count">14,208,391</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trust">
+    <p class="trust-label">Chosen by security teams who really, thoroughly thought this through</p>
+    <div class="trust-logos">
+      <span>VELLUM&nbsp;BANK</span>
+      <span>KESTREL&nbsp;LOGISTICS</span>
+      <span>NORTHFIELD&nbsp;HEALTH</span>
+      <span>ORCHARD&nbsp;ROW&nbsp;FOODS</span>
+      <span>GRAYPINE&nbsp;CAPITAL</span>
+      <span>STADIUM&nbsp;WORKS</span>
+    </div>
+  </div>
+
+  <section class="block" id="security">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Passwords leak. This doesn't.</h2>
+        <p>Every other factor you own has already been exposed to somebody, somewhere. This one hasn't &mdash; and our entire compliance program is built around keeping it that way.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat"><div class="num">1 in 7.8B</div><div class="cap">uniqueness of your enrolled pattern*</div></div>
+        <div class="stat"><div class="num">0</div><div class="cap">known breaches of this data type, ever</div></div>
+        <div class="stat"><div class="num">0</div><div class="cap">times this has appeared in a Slack profile photo</div></div>
+        <div class="stat"><div class="num">100%</div><div class="cap">of users who've never shown this at airport security</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="platform">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Built like it's guarding something</h2>
+        <p>Everything a real identity platform needs &mdash; pointed at a factor no real identity platform has ever needed.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>Continuous liveness detection</h3>
+          <p>Distinguishes a real, living pattern from a photo, a mold, or a coworker's very committed prank. Checked on every single authentication, not just enrollment.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div>
+          <h3>Zero-knowledge proof-of-match</h3>
+          <p>We confirm the match without ever storing, transmitting, or displaying the raw scan. Mathematically. We really do promise.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16M10 4v16"/></svg></div>
+          <h3>Multi-factor rear authentication</h3>
+          <p>Pair with a password, a hardware key, or a second and entirely different unique pattern for genuine defense in depth.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+          <h3>SSO, SAML 2.0 &amp; SCIM</h3>
+          <p>Drop-in identity provider for Okta, Azure&nbsp;AD, and any workforce brave enough to onboard it. Provisioning included.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
+          <h3>Cross-device sync</h3>
+          <p>Enroll once on the desk-mounted BLINK-1000 scanner. Authenticate from any registered reader, anywhere in the org.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg></div>
+          <h3>Compliance-ready</h3>
+          <p>SOC&nbsp;2 Type Cheeks, ISO/IEC&nbsp;69001, and a HIPAA stance our legal team asked us not to elaborate on here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap how">
+      <div>
+        <span class="eyebrow">ONBOARDING</span>
+        <h2 style="margin-top:14px;">Three steps. One conversation nobody wants to have twice.</h2>
+        <div class="steps" style="margin-top:28px;">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div><h3>Enroll</h3><p>Sit down with a certified enrollment technician and our patented BLINK-1000 rear-facing scanner. Takes about four minutes. Feels like considerably longer.</p></div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div><h3>Encode</h3><p>Your pattern is converted on-device into an irreversible cryptographic hash. Not an image. A hash. We cannot stress this enough, legally.</p></div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div><h3>Authenticate</h3><p>From then on, walk up to any registered reader and turn around. Confirm on your phone if prompted. That's the entire flow.</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="login-mock">
+        <div class="chrome"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="login-body">
+          <svg class="mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="14" stroke="var(--border)" stroke-width="1.6"/>
+            <circle cx="16" cy="16" r="9" stroke="var(--accent)" stroke-width="1.6" opacity=".7"/>
+            <circle cx="16" cy="16" r="3.4" fill="var(--accent)"/>
+          </svg>
+          <h3>Sign in to Vellum&nbsp;Bank</h3>
+          <p>Choose an identity provider to continue</p>
+          <div class="sso-btn"><span class="sso-swatch" style="background:#4285F4"></span>Continue with Google</div>
+          <div class="sso-btn"><span class="sso-swatch" style="background:#00A4EF"></span>Continue with Microsoft</div>
+          <div class="sso-btn selected"><span class="sso-swatch" style="background:var(--accent)"></span>Continue with Brown&nbsp;Eye&nbsp;Auth</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Pricing that scales with your workforce's trust in you</h2>
+        <p>Every plan includes unlimited authentications. What varies is how many people you're willing to ask.</p>
+      </div>
+      <div class="price-grid">
+        <div class="price-card">
+          <h3>Individual</h3>
+          <div class="price-amt">$0<span>&nbsp;/forever</span></div>
+          <p style="color:var(--text-dim); font-size:.88rem;">One enrolled identity, unlimited personal logins.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>1 enrolled identity</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>Zero-knowledge match engine</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>Community support forum</li>
+          </ul>
+          <a class="btn btn-ghost" href="#faq" style="margin-top:auto;">Get started</a>
+        </div>
+        <div class="price-card featured">
+          <span class="price-tag">Most&nbsp;deployed</span>
+          <h3>Team</h3>
+          <div class="price-amt">$12<span>&nbsp;/seat/mo</span></div>
+          <p style="color:var(--text-dim); font-size:.88rem;">For companies ready to have the all-hands.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>Up to 500 identities</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>SSO, SAML 2.0 &amp; SCIM</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>Priority scanner hardware</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>Dedicated onboarding session</li>
+          </ul>
+          <a class="btn btn-primary" href="#faq" style="margin-top:auto;">Get started</a>
+        </div>
+        <div class="price-card">
+          <h3>Enterprise</h3>
+          <div class="price-amt" style="font-size:1.5rem;">Cheeks at Scale</div>
+          <p style="color:var(--text-dim); font-size:.88rem;">Custom pricing for unlimited seats and a support line that answers.</p>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>Unlimited identities</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>On-site enrollment technician</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12l5 5 11-11"/></svg>24/7 support &amp; custom SLA</li>
+          </ul>
+          <a class="btn btn-ghost" href="#faq" style="margin-top:auto;">Talk to sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Trusted by the people who had to explain it upward</h2>
+      </div>
+      <div class="quote-grid">
+        <div class="quote-card">
+          <p class="q">"We cut phishing incidents to zero. Employees also stopped writing their passwords on sticky notes &mdash; mostly out of principle."</p>
+          <div class="quote-who"><div class="quote-avatar">DM</div><div><div class="name">Dana Marchetti</div><div class="role">Head of IT Security, Vellum Bank</div></div></div>
+        </div>
+        <div class="quote-card">
+          <p class="q">"Rolling this out to 4,000 employees was, without question, the most memorable all-hands in company history."</p>
+          <div class="quote-who"><div class="quote-avatar">RO</div><div><div class="name">Reuben Okafor</div><div class="role">VP People Ops, Kestrel Logistics</div></div></div>
+        </div>
+        <div class="quote-card">
+          <p class="q">"I have never once forgotten my credentials. I have, on the other hand, forgotten my badge. Frequently."</p>
+          <div class="quote-who"><div class="quote-avatar">SL</div><div><div class="name">Sasha Lindqvist</div><div class="role">Site Reliability Engineer, Northfield Health</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Frequently asked, quietly</h2>
+      </div>
+      <div class="faq">
+        <details class="faq-item" open>
+          <summary>Is this a real product?<span class="chev">+</span></summary>
+          <div class="a">No. Brown Eye Auth is a fictional company built for a joke about biometric security marketing. Nothing here is collected, stored, or real.</div>
+        </details>
+        <details class="faq-item">
+          <summary>What if I gain or lose weight?<span class="chev">+</span></summary>
+          <div class="a">Our matching model tolerates normal biological variance. Significant transformations may require re-enrollment and, frankly, a check-in.</div>
+        </details>
+        <details class="faq-item">
+          <summary>What about identical twins?<span class="chev">+</span></summary>
+          <div class="a">Even identical twins register distinct patterns. We have not independently verified this. We are fairly confident.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Is this covered by my benefits plan?<span class="chev">+</span></summary>
+          <div class="a">Please direct that question to your benefits team. We'd prefer you not ask us again.</div>
+        </details>
+        <details class="faq-item">
+          <summary>Can I use this at airport security?<span class="chev">+</span></summary>
+          <div class="a">Please, God, no. This is for logging into Salesforce.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="disclaimer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+      <p><strong>This is satire.</strong> Brown Eye Auth is a fictional company created for comedic effect. This page does not collect, process, transmit, or want anything to do with actual biometric data of any kind. No such hardware, product, or service exists &mdash; and if you're a real security vendor reading this for inspiration, please reconsider.</p>
+    </div>
+    <div class="foot-grid">
+      <div class="foot-col">
+        <a class="brand" href="#top" style="margin-bottom:10px; display:inline-flex;">
+          <svg viewBox="0 0 32 32" width="26" height="26" fill="none" aria-hidden="true">
+            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="1.6" opacity=".35"/>
+            <circle cx="16" cy="16" r="9" stroke="var(--accent)" stroke-width="1.6" opacity=".65"/>
+            <circle cx="16" cy="16" r="3.4" fill="var(--accent)"/>
+          </svg>
+          <span class="brand-name">Brown&nbsp;Eye&nbsp;Auth</span>
+        </a>
+        <p style="color:var(--text-dim); font-size:.86rem; max-width:32ch;">Identity verification, turned around. Not a real company &mdash; see disclaimer above.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <ul><li><a href="#platform">Platform</a></li><li><a href="#security">Security</a></li><li><a href="#pricing">Pricing</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <ul><li><a href="#faq">FAQ</a></li><li><a href="#top">About</a></li><li><a href="#top">Careers</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h4>Legal</h4>
+        <ul><li><a href="#faq">Privacy</a></li><li><a href="#faq">Terms</a></li><li><a href="#faq">Status</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Brown Eye Auth, Inc. (not a real company)</span>
+      <span class="mono">v1.0.0 &mdash; satire build</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var countEl = document.getElementById('rt-count');
+    var confEl = document.getElementById('rt-conf');
+    var base = 14208391;
+    setInterval(function(){
+      base += Math.floor(Math.random()*3)+1;
+      countEl.textContent = base.toLocaleString('en-US');
+      var conf = (99.995 + Math.random()*0.0049).toFixed(4);
+      confEl.textContent = conf + '%';
+    }, 1800);
+  })();
+</script>
