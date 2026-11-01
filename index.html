@@ -1,3 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Brown Eye Auth: enterprise biometric SSO for the one identifier you've never screenshotted. (Satire.)">
+<meta name="theme-color" content="#F5EFE4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#120D09" media="(prefers-color-scheme: dark)">
 <title>Brown Eye Auth</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -484,8 +492,102 @@
     padding-top:24px; border-top:1px solid var(--border);
     font-size:.8rem; color:var(--text-dim);
   }
+
+  /* ---------- MOBILE ---------- */
+  html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-padding-top:76px; }
+  body{ overflow-x:clip; }
+  .nav-menu{ display:none; position:relative; }
+  .nav-menu summary{
+    list-style:none; cursor:pointer;
+    width:42px; height:42px; border-radius:50%;
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--text);
+  }
+  .nav-menu summary::-webkit-details-marker{ display:none; }
+  .nav-menu summary svg{ width:20px; height:20px; }
+  .nav-menu .ico-close{ display:none; }
+  .nav-menu[open] .ico-open{ display:none; }
+  .nav-menu[open] .ico-close{ display:block; }
+  .nav-menu-panel{
+    position:absolute; right:0; top:calc(100% + 10px);
+    min-width:210px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    padding:8px;
+    display:flex; flex-direction:column;
+  }
+  .nav-menu-panel a{
+    text-decoration:none; color:var(--text);
+    font-weight:600; font-size:.98rem;
+    padding:12px 14px; border-radius:10px;
+  }
+  .nav-menu-panel a:hover, .nav-menu-panel a:active{ background:var(--accent-soft); color:var(--accent-bright); }
+  .nav-menu-panel hr{ border:0; border-top:1px solid var(--border); margin:6px 4px; }
+
+  @media (max-width:760px){
+    .nav-menu{ display:block; }
+    .nav-actions{ gap:8px; }
+  }
+
+  @media (max-width:600px){
+    .wrap{ padding-inline:16px; }
+    .nav{ padding-block:10px; }
+    .nav .btn{ padding:10px 16px; font-size:.88rem; }
+    .brand svg{ width:26px; height:26px; }
+    .brand-name{ font-size:.92rem; }
+
+    .hero{ padding-block:28px 44px; gap:32px; }
+    .hero h1{ font-size:clamp(1.85rem, 8.4vw, 2.3rem); margin-block:14px 14px; }
+    .hero h1 br{ display:none; }
+    .hero p.lead{ font-size:1rem; }
+    .hero-cta{ margin-top:22px; }
+    .hero-cta .btn{ flex:1 1 100%; padding-block:14px; }
+
+    .scan-panel{ padding:18px; border-radius:16px; }
+    .scanner{ max-width:220px; }
+    .scan-readout{ font-size:.72rem; }
+    .scan-readout div{ flex-wrap:wrap; gap:2px 12px; }
+
+    .trust{ padding-block:18px; }
+    .trust-logos{ gap:10px 20px; font-size:.76rem; }
+
+    section.block{ padding-block:52px; }
+    .section-head{ margin-bottom:28px; gap:10px; }
+    .section-head h2{ font-size:clamp(1.45rem, 6.4vw, 1.8rem); }
+
+    .stat{ padding:20px 12px; }
+    .stat .num{ font-size:1.3rem; }
+    .stat .cap{ font-size:.8rem; }
+
+    .feat-card, .quote-card{ padding:20px; }
+    .how{ gap:32px; }
+    .how h2{ font-size:1.45rem; }
+    .login-body{ padding:24px 18px 26px; }
+    .price-grid, .quote-grid{ gap:22px; }
+    .price-card{ padding:24px 20px; }
+
+    .faq-item summary{ padding:16px; gap:12px; }
+    .faq-item .a{ padding:0 16px 16px; }
+
+    footer{ padding-block:36px 24px; }
+    .disclaimer{ padding:16px; margin-bottom:28px; }
+    .foot-grid{ gap:24px 16px; }
+    .foot-grid .foot-col:first-child{ grid-column:1 / -1; }
+    .foot-bottom{ flex-direction:column; align-items:flex-start; gap:6px; }
+  }
+
+  @media (max-width:360px){
+    .nav .btn{ padding:9px 12px; }
+    .brand-name{ font-size:.84rem; }
+    .stats-grid{ grid-template-columns:1fr; }
+  }
 </style>
 
+</head>
+<body>
 <header>
   <div class="wrap nav">
     <a class="brand" href="#top">
@@ -505,6 +607,20 @@
     <div class="nav-actions">
       <a class="btn btn-ghost nav-mobile-hide" href="#faq">Sign in</a>
       <a class="btn btn-primary" href="#pricing">Get started</a>
+      <details class="nav-menu">
+        <summary aria-label="Open menu">
+          <svg class="ico-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <svg class="ico-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </summary>
+        <nav class="nav-menu-panel" aria-label="Mobile">
+          <a href="#platform">Platform</a>
+          <a href="#security">Security</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+          <hr>
+          <a href="#faq">Sign in</a>
+        </nav>
+      </details>
     </div>
   </div>
 </header>
@@ -513,7 +629,7 @@
   <div class="wrap hero">
     <div>
       <span class="eyebrow">ENTERPRISE BIOMETRIC SSO</span>
-      <h1>The one identifier<br>you've <em>never</em> screenshotted.</h1>
+      <h1>The one identifier <br>you've <em>never</em> screenshotted.</h1>
       <p class="lead">Fingerprints end up on wine glasses. Faces end up on billboards. Retinas end up in a documentary about surveillance. Brown&nbsp;Eye&nbsp;Auth verifies identity using the single most unique pattern you own &mdash; one you have never shown a stranger, a camera, or a LinkedIn recruiter.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="#pricing">Start free scan</a>
@@ -795,4 +911,12 @@
       confEl.textContent = conf + '%';
     }, 1800);
   })();
+  (function(){
+    var menu = document.querySelector('.nav-menu');
+    if(!menu) return;
+    menu.addEventListener('click', function(e){ if(e.target.closest('a')) menu.removeAttribute('open'); });
+    document.addEventListener('click', function(e){ if(menu.open && !menu.contains(e.target)) menu.removeAttribute('open'); });
+  })();
 </script>
+</body>
+</html>
